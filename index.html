@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía Completa de Combates Kanto - MODO DIFÍCIL</title>
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --card-bg: #1e293b;
+            --card-border: #334155;
+            --accent-red: #ef4444;
+            --accent-gold: #f59e0b;
+            --accent-blue: #38bdf8;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            color: var(--accent-red);
+            font-size: 2.2rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+            text-shadow: 0 0 10px rgba(239, 68, 68, 0.4);
+        }
+
+        .subtitle {
+            color: var(--accent-gold);
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .search-container {
+            max-width: 600px;
+            margin: 20px auto 30px auto;
+            position: sticky;
+            top: 10px;
+            z-index: 100;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 20px;
+            border-radius: 25px;
+            border: 2px solid var(--accent-red);
+            background-color: var(--card-bg);
+            color: var(--text-main);
+            font-size: 1rem;
+            box-sizing: border-box;
+            outline: none;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
+
+        .section-header {
+            background: linear-gradient(90deg, #991b1b, #b91c1c);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin: 30px 0 15px 0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 20px;
+        }
+
+        .encounter-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .encounter-title {
+            background-color: #334155;
+            padding: 12px 16px;
+            font-weight: bold;
+            font-size: 1.05rem;
+            color: var(--accent-gold);
+            border-bottom: 2px solid var(--accent-red);
+        }
+
+        .pokemon-list {
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .pokemon-card {
+            background-color: #0f172a;
+            border-radius: 8px;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border: 1px solid #1e293b;
+        }
+
+        .sprite-box {
+            width: 65px;
+            height: 65px;
+            background-color: #1e293b;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--card-border);
+            flex-shrink: 0;
+        }
+
+        .sprite-box img {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+        }
+
+        .pokemon-info {
+            flex: 1;
+        }
+
+        .pokemon-name {
+            font-weight: bold;
+            font-size: 1rem;
+            color: var(--accent-blue);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .level {
+            color: var(--accent-gold);
+            font-size: 0.9rem;
+        }
+
+        .item-badge {
+            display: inline-block;
+            background-color: #d97706;
+            color: white;
+            font-size: 0.75rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-top: 2px;
+            font-weight: bold;
+        }
+
+        .details-line {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            margin-top: 3px;
+        }
+
+        .moves-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4px;
+            margin-top: 6px;
+        }
+
+        .move-tag {
+            background-color: #334155;
+            color: #cbd5e1;
+            font-size: 0.72rem;
+            padding: 2px 4px;
+            border-radius: 4px;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>⚔️ Guía Completa de Kanto ⚔️</h1>
+    <div class="subtitle">MODO DIFÍCIL - TODOS LOS COMBATES</div>
+</header>
+
+<div class="search-container">
+    <input type="text" id="searchInput" class="search-input" placeholder="🔍 Buscar por entrenador, zona o Pokémon..." onkeyup="filterEncounters()">
+</div>
+
+<div id="content"></div>
+
+<script>
+const battlesData = [
+    {
+        location: "ISLA INTA",
+        encounters: [
+            {
+                trainer: "VS RIVAL ANDRA (1er encuentro)",
+                pokemon: [
+                    { name: "Zubat", id: 41, lvl: 7, item: "No item", details: "Nat: -", moves: [] }
+                ]
+            },
+            {
+                trainer: "VS CONSUL",
+                pokemon: [
+                    { name: "Meowth", id: 52, lvl: 11, item: "No item", details: "Seria | Recogida | IVs: 4/31 | EVs: 16", moves: ["Sorpresa", "Arañazo", "Pistola agua"] },
+                    { name: "Wooper", id: 194, lvl: 11, item: "No item", details: "Seria | Humedad | IVs: 4/31 | EVs: 16", moves: ["Pistola agua", "Bostezo", "Bofetón lodo", "Tumba rocas"] },
+                    { name: "Hoppip", id: 187, lvl: 11, item: "No item", details: "Seria | Clorofila | IVs: 4/31 | EVs: 16", moves: ["Absorber", "Síntesis", "Destello"] },
+                    { name: "Mareep", id: 179, lvl: 11, item: "Baya Zidra", details: "Modesta | Peluche | IVs: 16/31 | EVs: 16", moves: ["Impactrueno", "Onda trueno", "Golpe cabeza", "Abrecaminos"] }
+                ]
+            }
+        ]
+    },
+    {
+        location: "VÍA SUBTERRÁNEA - CIUDAD CARMÍN",
+        encounters: [
+            {
+                trainer: "VS RIVAL ANDRA (2do encuentro)",
+                pokemon: [
+                    { name: "Tentacool", id: 72, lvl: 14, item: "B.Aranja", details: "Seria | Lodo Líquido | IVs: 5/31 | EVs: 20", moves: ["Pistola agua", "Supersónico", "Repetición", "Ácido"] },
+                    { name: "Teddiursa", id: 216, lvl: 13, item: "B.Aranja", details: "Seria | Recogida | IVs: 5/31 | EVs: 20", moves: ["Derribo", "Garra metal", "Ojitos tiernos"] },
+                    { name: "Zubat Inicial", id: 41, lvl: 15, item: "B.Zidra", details: "Firme | Foco Interno | IVs: 5/31 | EVs: 20", moves: ["Absorber", "Mordisco", "Ataque ala", "At.rápido"] }
+                ]
+            }
+        ]
+    },
+    {
+        location: "MT. MOON - MISIÓN FÓSILES",
+        encounters: [
+            {
+                trainer: "VS ALTO RANGO FRANK (1er encuentro)",
+                pokemon: [
+                    { name: "Rattata", id: 19, lvl: 15, item: "Banda Focus", details: "Seria | Entusiasmo | IVs: 6/31 | EVs: 24", moves: ["Placaje", "Persecución", "At.rápido", "Mordisco"] },
+                    { name: "Ekans", id: 23, lvl: 16, item: "B.Zidra", details: "Seria | Intimidación | IVs: 6/31 | EVs: 24", moves: ["Colmillo veneno", "Golpe bajo", "Deslumbrar", "Mordisco"] },
+                    { name: "Nidorino", id: 33, lvl: 16, item: "B.Zidra", details: "Seria | Punto Tóxico | IVs: 6/31 | EVs: 24", moves: ["Colmillo veneno", "Derribo", "Onda voltio", "Hidropulso"] },
+                    { name: "Raticate", id: 20, lvl: 17, item: "B.Ziuela", details: "Alegre | Agallas | IVs: 17/31 | EVs: 24", moves: ["Hiper colmillo", "Mordisco", "At.rápido", "Golpe roca"] }
+                ]
+            }
+        ]
+    },
+    {
+        location: "CASA DE BILL - MISIÓN PATENTE TELETRANSPORTE",
+        encounters: [
+            {
+                trainer: "VS COLECCIONISTA BILL (1er encuentro)",
+                pokemon: [
+                    { name: "Kabuto", id: 140, lvl: 17, item: "Baya Tamar", details: "Seria | Arm.Frágil | IVs: 8/31 | EVs: 28", moves: ["Desarme", "Gigadrenado", "Tumba rocas", "Acua jet"] },
+                    { name: "Eevee", id: 133, lvl: 17, item: "B.Ziuela", details: "Seria | Adaptable | IVs: 8/31 | EVs: 28", moves: ["Placaje", "Ataque rápido", "Mordisco", "Bostezo"] },
+                    { name: "Clefairy", id: 35, lvl: 18, item: "B.Zidra", details: "Seria | Muro mágico | IVs: 8/31 | EVs: 28", moves: ["Reflejo", "Luz lunar", "Golpe cabeza", "Voz cautivadora"] },
+                    { name: "Dratini", id: 147, lvl: 18, item: "Colmillodragón", details: "Seria | Multiescamas | IVs: 8/31 | EVs: 28", moves: ["Hidropulso", "Onda trueno", "Furia dragón", "Onda voltio"] },
+                    { name: "Porygon", id: 137, lvl: 19, item: "Mineral Evol", details: "Modesta | Descarga | IVs: 18/31 | EVs: 28", moves: ["Psicorrayo", "Onda voltio", "Doble rayo", "Rapidez"] }
+                ]
+            }
+        ]
+    },
+    {
+        location: "SS.ANNE - MISIÓN FRASCO CAPITÁN BARCO",
+        encounters: [
+            {
+                trainer: "VS AZUL (1er encuentro)",
+                pokemon: [
+                    { name: "Pidgeotto", id: 17, lvl: 19, item: "Cinta Fuerte", details: "Seria | Garra Dura | IVs: 8/31 | EVs: 28", moves: ["Ida y vuelta", "Ataque ala", "At.rápido", "Ala de acero"] },
+                    { name: "Raticate", id: 20, lvl: 16, item: "P.Seda", details: "Seria | Agallas | IVs: 8/31 | EVs: 28", moves: ["Hypercolmillo", "Garra metal", "Persecución", "At.rápido"] },
+                    { name: "Growlithe", id: 58, lvl: 17, item: "Baya Pasio", details: "Seria | Intimidación | IVs: 8/31 | EVs: 28", moves: ["Rueda fuego", "Mordisco", "Doble patada", "Giro fuego"] },
+                    { name: "Kadabra", id: 64, lvl: 18, item: "Cuch.Torcida", details: "Seria | Sincronización | IVs: 8/31 | EVs: 28", moves: ["Reflejo", "Psicorrayo", "Kinético", "Recuperación"] },
+                    { name: "Eevee Starter", id: 133, lvl: 19, item: "B.Ziuela", details: "Seria | Adaptable | IVs: 8/31 | EVs: 28", moves: ["Deseo", "Mordisco", "Ataque rápido", "Bostezo"] },
+                    { name: "Wartortle", id: 8, lvl: 20, item: "B.Zidra", details: "Osada | Torrente | IVs: 20/31 | EVs: 28", moves: ["Hidropulso", "Mordisco", "Puño hielo", "Cabezazo"] }
+                ]
+            },
+            {
+                trainer: "VS CAPITÁN EDWARD (1er encuentro)",
+                pokemon: [
+                    { name: "Pupitar", id: 247, lvl: 21, item: "Roca Suave", details: "Seria | Chorro Arena | IVs: 9/31 | EVs: 32", moves: ["Magnitud", "Avalancha", "Trampa rocas", "Mordisco"] },
+                    { name: "Seadra", id: 117, lvl: 20, item: "B.Ziuela", details: "Seria | Punto Tóxico | IVs: 9/31 | EVs: 32", moves: ["Dragoaliento", "Rayo aurora", "Hidropulso", "Niebla clara"] },
+                    { name: "Vibrava", id: 329, lvl: 20, item: "Banda Focus", details: "Seria | Levitación | IVs: 9/31 | EVs: 32", moves: ["Triturar", "Picadura", "Terratemblor", "Tumba rocas"] },
+                    { name: "Shelgon", id: 372, lvl: 21, item: "Restos", details: "Seria | Funda | IVs: 9/31 | EVs: 32", moves: ["Furia dragón", "Protección", "Tóxico", "Colmillo ígneo"] },
+                    { name: "Crawdaunt", id: 342, lvl: 22, item: "B.Zidra", details: "Osada | Corte Fuerte | IVs: 21/31 | EVs: 32", moves: ["Corte", "Desarme", "Aqua jet", "Poder pasado"] }
+                ]
+            }
+        ]
+    },
+    {
+        location: "RUTA 10",
+        encounters: [
+            {
+                trainer: "VS ANDRA (3er encuentro)",
+                pokemon: [
+                    { name: "Tentacruel", id: 73, lvl: 25, item: "Lodo Negro", details: "Seria | Lodo Líquido | IVs: 9/31 | EVs: 32", moves: ["Hidropulso", "Acua aro", "Ácido", "Púas tóxicas"] },
+                    { name: "Teddiursa", id: 216, lvl: 24, item: "P.Seda", details: "Seria | Recogida | IVs: 9/31 | EVs: 32", moves: ["Cuchillada", "Garra metal", "Vendetta", "Ojitos tiernos"] },
+                    { name: "Electabuzz", id: 125, lvl: 23, item: "Imán", details: "Seria | El.Estática | IVs: 9/31 | EVs: 32", moves: ["Onda trueno", "At.rápido", "Onda voltio", "Patada baja"] },
+                    { name: "Golbat", id: 42, lvl: 26, item: "B.Zidra", details: "Firme | Foco Interno | IVs: 21/31 | EVs: 32", moves: ["Golpe aéreo", "Rayo confuso", "Megaagotar", "Colm.veneno"] }
+                ]
+            }
+        ]
+    },
+    {
+        location: "TÚNEL ROCA - MISIÓN KANGASKHAN PERDIDO",
+        encounters: [
+            {
+                trainer: "VS ENTRENADORA GUAY VERO",
+                pokemon: [
+                    { name: "Ponyta", id: 77, lvl: 23, item: "No item", details: "Estándar", moves: [] },
+                    { name: "Nidorina", id: 30, lvl: 24, item: "No item", details: "Estándar", moves: [] },
+                    { name: "Clefable", id: 36, lvl: 25, item: "No item", details: "Estándar", moves: [] }
+                ]
+            },
+            {
+                trainer: "VS CIENTÍFICO MIGUEL (2do encuentro)",
+                pokemon: [
+                    { name: "Kabuto", id: 140, lvl: 28, item: "Banda Focus", details: "Seria | Arm.Frágil | IVs: 9/31 | EVs: 28", moves: ["Trampa rocas", "Avalancha", "Aqua jet", "Desarme"] },
+                    { name: "Electrode", id: 101, lvl: 30, item: "Refleluz", details: "Seria | Detonación | IVs: 9/31 | EVs: 28", moves: ["Reflejo", "Mov.sísmico", "Onda voltio", "Pantalla luz"] },
+                    { name: "Kangaskhan", id: 115, lvl: 29, item: "Gema Normal", details: "Seria | Intrépido | IVs: 9/31 | EVs: 28", moves: ["Garra brutal", "Demolición", "Sorpresa", "Golpe bajo"] },
+                    { name: "Lickitung", id: 108, lvl: 29, item: "Mineral Evolutivo", details: "Seria | Ritmo Propio | IVs: 9/31 | EVs: 28", moves: ["Desarme", "Pisotón", "Amnesia", "Maldición"] },
+                    { name: "Muk", id: 89, lvl: 31, item: "Lodo Negro", details: "Agitada | Toque Tóxico | IVs: 9/31 | EVs: 28", moves: ["Sombra vil", "Puño drenaje", "Golpe cuerpo", "Maldición"] }
+                ]
+            }
+        ]
+    },
+    {
+        location: "TORRE POKÉMON - MISIÓN FUJI Y PROTÓN",
+        encounters: [
+            {
+                trainer: "VS CRIAPOKÉMON FUJI",
+                pokemon: [
+                    { name: "Haunter", id: 93, lvl: 30, item: "Mineral Evolutivo", details: "Seria | Levitación | IVs: 10/31 | EVs: 36", moves: ["Bola sombra", "Psíquico", "Niebla clara", "Hipnosis"] },
+                    { name: "Kadabra", id: 64, lvl: 31, item: "Banda Focus", details: "Seria | Muro Mágico | IVs: 10/31 | EVs: 36", moves: ["Psicorrayo", "Onda voltio", "Reflejo", "Bola sombra"] },
+                    { name: "Raichu", id: 26, lvl: 32, item: "Refleluz", details: "Seria | El.Estática | IVs: 10/31 | EVs: 36", moves: ["Onda voltio", "Sorpresa", "Surf", "Pantalla luz"] },
+                    { name: "Hypno", id: 97, lvl: 32, item: "Telescopio", details: "Seria | Insomnio | IVs: 10/31 | EVs: 36", moves: ["Hipnosis", "Puño hielo", "Puño fuego", "Psicorrayo"] },
+                    { name: "Marowak", id: 105, lvl: 33, item: "Hueso Grueso", details: "Firme | Armadura Batalla | IVs: 22/31 | EVs: 36", moves: ["Huesomerang", "Avalancha", "Puño sombra", "Golpe"] }
+                ]
+            },
+            {
+                trainer: "VS CULTISTA 'M'",
+                pokemon: [
+                    { name: "Misdreavus", id: 200, lvl: 32, item: "Tabla Terror", details: "Modesta | Levitación | IVs: 23/31 | EVs: 40", moves: ["Brillo mágico", "Bola sombra", "Viento aciago", "Hipnosis"] },
+                    { name: "Xatu", id: 178, lvl: 33, item: "Refleluz", details: "Modesta | Espejomágico | IVs: 23/31 | EVs: 40", moves: ["Pantalla luz", "Tajo aéreo", "Respiro", "Reflejo"] },
+                    { name: "Dusclops", id: 356, lvl: 34, item: "Mineral Evolutivo", details: "Firme | Presión | IVs: 23/31 | EVs: 252 Def/SpD", moves: ["Poltergeist", "Divide dolor", "Fuego fatuo", "Puño drenaje"] },
+                    { name: "Lucario", id: 448, lvl: 34, item: "Restos", details: "Osada | Foco Interno | IVs: 23/31 | EVs: 44", moves: ["Esfera aural", "Velocidad extrema", "Psíquico", "Foco resplandor"] }
+                ]
+            },
+            {
+                trainer: "VS MAROGHOST",
+                pokemon: [
+                    { name: "Maroghost", id: 105, lvl: 37, item: "Semilla Bruma", details: "Firme | Sombratrampa | IVs: 31/31 | EVs: 40", moves: ["Hueso sombrío", "Sombra vil", "Represalia", "Huesomerang"] }
+                ]
+            }
+        ]
+    },
+    {
+        location: "BASE ROCKET PROFUNDA",
+        encounters: [
+            {
+                trainer: "VS EJECUTIVO ROCKET FRANK",
+                pokemon: [
+                    { name: "Gligar", id: 207, lvl: 31, item: "Mineral Evolutivo", details: "Seria | Cortefuerte | IVs: 11/31 | EVs: 32", moves: ["Trampa rocas", "Guillotina", "Respiro", "Ala bis"] },
+                    { name: "Raticate", id: 20, lvl: 33, item: "Lupa", details: "Seria | Entusiasmo | IVs: 11/31 | EVs: 32", moves: ["Hipercolmillo", "Golpe bajo", "Triturar", "At.rápido"] },
+                    { name: "Arbok", id: 24, lvl: 33, item: "Lodo Negro", details: "Seria | Intimidación | IVs: 11/31 | EVs: 32", moves: ["Colm.Veneno", "Golpe bajo", "Deslumbrar", "Colmillo hielo"] },
+                    { name: "Kabutops", id: 141, lvl: 34, item: "Banda focus", details: "Firme | Arm.Frágil | IVs: 11/31 | EVs: 32", moves: ["Avalancha", "Acua jet", "Desarme", "Hidroariete"] },
+                    { name: "Nidoking", id: 34, lvl: 34, item: "B.Zidra", details: "Seria | Potencia Bruta | IVs: 23/31 | EVs: 32", moves: ["Perforador", "Residuos", "Hidropulso", "Rayo"] }
+                ]
+            },
+            {
+                trainer: "VS ANDRA (4to encuentro)",
+                pokemon: [
+                    { name: "Electivire", id: 466, lvl: 35, item: "Imán", details: "Seria | Electromotor | IVs: 11/31 | EVs: 40", moves: ["Puño trueno", "Puño hielo", "Puño fuego", "Demolición"] },
+                    { name: "Tentacruel", id: 73, lvl: 34, item: "Lodo Negro", details: "Seria | Lodo Líquido | IVs: 11/31 | EVs: 40", moves: ["Hidropulso", "Puya nociva", "Desarme", "Rayo hielo"] },
+                    { name: "Ursaring", id: 217, lvl: 34, item: "P.Seda", details: "Seria | Agallas | IVs: 11/31 | EVs: 40", moves: ["Cuchillada", "Puño hielo", "Machada", "Carantoña"] },
+                    { name: "Golbat", id: 42, lvl: 35, item: "Mineral Evolutivo", details: "Firme | Foco Interno | IVs: 23/31 | EVs: 40", moves: ["Vuelo", "Ala de acero", "Colm.veneno", "Chupavidas"] }
+                ]
+            }
+        ]
+    },
+    {
+        location: "MUSEO PLATEADA - CAMINO A PUEBLO PALETA",
+        encounters: [
+            {
+                trainer: "VS CIENTÍFICO MIGUEL (3er encuentro)",
+                pokemon: [
+                    { name: "Weezing", id: 110, lvl: 34, item: "Lodo Negro", details: "Seria | Levitación | IVs: 11/31 | EVs: 40", moves: ["Bomba ácida", "Lanzallamas", "Divide dolor", "Fuego fatuo"] },
+                    { name: "Yanma", id: 193, lvl: 33, item: "Banda Focus", details: "Seria | Impulso | IVs: 11/31 | EVs: 40", moves: ["Chupavidas", "Protección", "Gigadrenado", "Viento aciago"] },
+                    { name: "Ditto", id: 132, lvl: 34, item: "Pañuelo Elegido", details: "Seria | Impostor | IVs: 11/31 | EVs: 40", moves: ["Transformación"] },
+                    { name: "Magneton", id: 82, lvl: 35, item: "Refleluz", details: "Seria | Robustez | IVs: 11/31 | EVs: 40", moves: ["Onda voltio", "Foco resplandor", "Onda trueno", "Pantalla luz"] },
+                    { name: "Omastar", id: 139, lvl: 36, item: "Chal.Asalto", details: "Modesta | Caparazón | IVs: 11/31 | EVs: 40", moves: ["Rayo hielo", "Hidropulso", "Poder pasado", "Tierra viva"] }
+                ]
+            }
+        ]
+    },
+    {
+        location: "LABORATORIO OAK",
+        encounters: [
+            {
+                trainer: "VS DALIA (1er encuentro)",
+                pokemon: [
+                    { name: "Mr.Mime", id: 122, lvl: 35, item: "Refleluz", details: "Seria | Filtro | IVs: 12/31 | EVs: 44", moves: ["Psicorrayo", "Pantalla luz", "Reflejo", "Onda certera"] },
+                    { name: "Flareon", id: 136, lvl: 36, item: "Hierba Blanca", details: "Seria | Agallas | IVs: 12/31 | EVs: 44", moves: ["Flarembestida", "Fuerza", "Fuerza bruta", "Triturar"] },
+                    { name: "Chansey", id: 113, lvl: 36, item: "Mineral Evolutivo", details: "Seria | Dicha | IVs: 12/31 | EVs: 44", moves: ["Mov.sísmico", "Bola sombra", "Amortiguador", "Rizo defensa"] },
+                    { name: "Raichu", id: 26, lvl: 37, item: "Gema Normal", details: "Miedosa | El.Estática | IVs: 24/31 | EVs: 44", moves: ["Rayo", "Surf", "Sorpresa", "Cola férrea"] },
+                    { name: "Lickilicky", id: 463, lvl: 37, item: "Restos", details: "Seria | Despiste | IVs: 24/31 | EVs: 44", moves: ["Latigazo", "Desarme", "Golpe cuerpo", "Fuerza"] }
+                ]
+            }
+        ]
+    },
+    {
+        location: "RUTA 13 - MISIÓN ARTICUNO",
+        encounters: [
+            {
+                trainer: "VS AZUL (2do encuentro)",
+                pokemon: [
+                    { name: "Rhyhorn", id: 111, lvl: 36, item: "Banda Focus", details: "Seria | Cabeza Roca | IVs: 14/31 | EVs: 56", moves: ["Trampa rocas", "Perforador", "Pedrada", "Taladradora"] },
+                    { name: "Pidgeot", id: 18, lvl: 36, item: "Cinta Fuerte", details: "Seria | Garra Dura | IVs: 14/31 | EVs: 56", moves: ["Vuelo", "Onda ígnea", "Ala de acero", "At.rápido"] },
+                    { name: "Eevee Starter", id: 133, lvl: 37, item: "Piedra Pómez", details: "Seria | Adaptable | IVs: 14/31 | EVs: 56", moves: ["Retroceso", "Umbreozona", "Espeaura", "Vapodrenaje"] },
+                    { name: "Alakazam", id: 65, lvl: 35, item: "Refleluz", details: "Seria | Muro Mágico | IVs: 14/31 | EVs: 56", moves: ["Psicorrayo", "Onda voltio", "Bola sombra", "Reflejo"] },
+                    { name: "Growlithe", id: 58, lvl: 37, item: "Min.Evol", details: "Seria | Intimidación | IVs: 12/31 | EVs: 44", moves: ["Triturar", "Enfado", "Rueda fuego", "Represalia"] },
+                    { name: "Blastoise", id: 9, lvl: 38, item: "Chal.Asalto", details: "Osada | Torrente | IVs: 26/31 | EVs: 56", moves: ["Surf", "Rayo hielo", "Cabezazo", "Esfera aural"] }
+                ]
+            }
+        ]
+    },
+    {
+        location: "RUTA 16 - MISIÓN ARTICUNO",
+        encounters: [
+            {
+                trainer: "VS BRUNO (1er encuentro)",
+                pokemon: [
+                    { name: "Steelix", id: 208, lvl: 42, item: "Rev.Metálico", details: "Firme | Robustez | IVs: 31/31 | EVs: 252 PS/Atk", moves: ["Cabezahierro", "Terremoto", "Roca afilada", "Trampa rocas"] },
+                    { name: "Hitmonlee", id: 106, lvl: 41, item: "Gema Normal", details: "Firme | Liviano | IVs: 31/31 | EVs: 252 Atk/Spe", moves: ["A bocajarro", "Avalancha", "Desarme", "Sorpresa"] },
+                    { name: "Poliwrath", id: 62, lvl: 43, item: "Chal.Asalto", details: "Firme | Abs.Agua | IVs: 31/31 | EVs: 252 Def/Atk", moves: ["Puño drenaje", "Cascada", "Terremoto", "Avalancha"] }
+                ]
+            }
+        ]
+    },
+    {
+        location: "ISLAS ESPUMA - MISIÓN ARTICUNO",
+        encounters: [
+            {
+                trainer: "VS ARTICUNO",
+                pokemon: [
+                    { name: "Articuno", id: 144, lvl: 50, item: "B.Ziuela", details: "Osada | Escama de Hielo | IVs: 31/31", moves: ["Aerochorro", "Ventisca", "Respiro", "Paisaje nevado"] }
+                ]
+            }
+        ]
+    },
+    {
+        location: "CENTRAL ENERGÍA - MISIÓN ZAPDOS",
+        encounters: [
+            {
+                trainer: "VS ZAPDOS",
+                pokemon: [
+                    { name: "Zapdos", id: 145, lvl: 50, item: "B.Ziuela", details: "Modesta | Alas Vendaval | IVs: 31/31", moves: ["Aerochorro", "Rayo", "Onda ígnea", "Viento aciago"] }
+                ]
+            },
+            {
+                trainer: "VS SURGE (1er encuentro)",
+                pokemon: [
+                    { name: "Pikachu", id: 25, lvl: 38, item: "Gema Normal", details: "Seria | El.Estática | IVs: 14/31 | EVs: 52", moves: ["Fake out", "Onda voltio", "Vel.extrema", "Surf"] },
+                    { name: "Electrode", id: 101, lvl: 39, item: "Imán", details: "Seria | El.Estática | IVs: 14/31 | EVs: 52", moves: ["Onda voltio", "Mov.sísmico", "Levitón", "Onda anómala"] },
+                    { name: "Electabuzz", id: 125, lvl: 40, item: "Cinta Fuerte", details: "Seria | El.Estática | IVs: 14/31 | EVs: 52", moves: ["Puño trueno", "Puño hielo", "Puño fuego", "Tajo cruzado"] },
+                    { name: "Raichu", id: 26, lvl: 40, item: "Vidasfera", details: "Seria | El.Estática | IVs: 14/31 | EVs: 52", moves: ["Onda voltio", "Golpe cuerpo", "Demolición", "Sorpresa"] },
+                    { name: "Jolteon", id: 135, lvl: 41, item: "B.Zidra", details: "Miedosa | Abs.Eléct | IVs: 26/31 | EVs: 52", moves: ["Onda voltio", "Bola sombra", "Deseo", "Rapidez"] }
+                ]
+            }
+        ]
+    },
+    {
+        location: "CIUDAD AZAFRÁN - MISIÓN SILPH SA",
+        encounters: [
+            {
+                trainer: "VS ANDRA (5to encuentro)",
+                pokemon: [
+                    { name: "Electivire", id: 466, lvl: 43, item: "B.Zidra", details: "Seria | Puño Férreo | IVs: 15/31 | EVs: 60", moves: ["Puño trueno", "Puño fuego", "Puño hielo", "Tajo cruzado"] },
+                    { name: "Tentacruel", id: 73, lvl: 41, item: "Lodo negro", details: "Seria | Lodo Líquido | IVs: 15/31 | EVs: 60", moves: ["Escaldar", "Barrera", "Puya nociva", "Desarme"] },
+                    { name: "Sneasel", id: 215, lvl: 41, item: "Banda Focus", details: "Seria | Foco Interno | IVs: 15/31 | EVs: 60", moves: ["Puño hielo", "Desarme", "Sorpresa", "Canto helado"] },
+                    { name: "Ursaring", id: 217, lvl: 42, item: "Llamasfera", details: "Seria | Agallas | IVs: 15/31 | EVs: 60", moves: ["Imagen", "Terremoto", "Abrecaminos", "Puño fuego"] },
+                    { name: "Golbat", id: 42, lvl: 43, item: "Min.Evol", details: "Firme | Allanamiento | IVs: 27/31 | EVs: 60", moves: ["Vuelo", "Respiro", "Chupavidas", "Veneno x"] }
+                ]
+            },
+            {
+                trainer: "VS TRABAJADOR SILPH",
+                pokemon: [
+                    { name: "Graveler", id: 75, lvl: 35, item: "Min.Evol", details: "Estándar", moves: [] },
+                    { name: "Magneton", id: 82, lvl: 36, item: "Min.Evol", details: "Estándar", moves: [] },
+                    { name: "Slowbro", id: 80, lvl: 37, item: "Chal.Asalto", details: "Estándar", moves: [] }
+                ]
+            },
+            {
+                trainer: "VS PRESIDENTE SILPH (1er encuentro)",
+                pokemon: [
+                    { name: "Dodrio", id: 85, lvl: 44, item: "Pañuelo Elegido", details: "Seria | Madrugar | IVs: 17/31 | EVs: 68", moves: ["Pico taladro", "Desarme", "Pataleta", "Ida y vuelta"] },
+                    { name: "Rapidash", id: 78, lvl: 45, item: "Vidasfera", details: "Seria | Cuerpo Llama | IVs: 17/31 | EVs: 68", moves: ["Taladradora", "Voltio cruel", "Lanzallamas", "Perforador"] },
+                    { name: "Rhydon", id: 112, lvl: 46, item: "Banda focus", details: "Seria | Cabeza Roca | IVs: 15/31 | EVs: 56", moves: ["Terremoto", "Perforador", "Pedrada", "Romperrocas"] },
+                    { name: "Snorlax", id: 143, lvl: 47, item: "Hierba Única", details: "Firme | Sebo | IVs: 29/31 | EVs: 188 PS", moves: ["Cabezazo", "Descanso", "Sonámbulo", "Cuerpo pesado"] },
+                    { name: "Venusaur", id: 3, lvl: 47, item: "Lodo Negro", details: "Modesta | Sebo | IVs: 31/31 | EVs: 68", moves: ["Bomba lodo", "Planta feroz", "Síntesis", "Poder oculto (fuego)"] }
+                ]
+            },
+            {
+                trainer: "VS COLECCIONISTA BILL (2do encuentro)",
+                pokemon: [
+                    { name: "Aerodactyl", id: 142, lvl: 44, item: "Banda focus", details: "Firme | Presión | IVs: 16/31 | EVs: 64", moves: ["Avalancha", "Trampa rocas", "Vuelo", "Terremoto"] },
+                    { name: "Dragonair", id: 148, lvl: 42, item: "Min.Evol", details: "Seria | Multiescamas | IVs: 16/31 | EVs: 64", moves: ["Carga dragón", "Reflejo", "Pantalla luz", "Llamarada"] },
+                    { name: "Clefable", id: 36, lvl: 43, item: "Vidasfera", details: "Seria | Muro Mágico | IVs: 16/31 | EVs: 64", moves: ["Fuerza lunar", "Lanzallamas", "Rayo hielo", "Rayo"] },
+                    { name: "Kangaskhan", id: 115, lvl: 43, item: "Chal.Asalto", details: "Seria | Intrépido | IVs: 16/31 | EVs: 64", moves: ["Sorpresa", "Doble filo", "Golpe bajo", "Terremoto"] },
+                    { name: "Vaporeon", id: 134, lvl: 44, item: "Gema Agua", details: "Seria | Abs.Agua | IVs: 16/31 | EVs: 64", moves: ["Hidrobomba", "Rayo hielo", "Bola sombra", "Bostezo"] },
+                    { name: "Porygon2", id: 233, lvl: 45, item: "Min.Evol", details: "Osada | Descarga | IVs: 28/31 | EVs: 64", moves: ["Tri ataque", "Chispazo", "Psíquico", "Recuperación"] }
+                ]
+            },
+            {
+                trainer: "VS BILL/MIGUEL COMBATE DOBLE",
+                pokemon: [
+                    { name: "Magneton", id: 82, lvl: 42, item: "Min.Evol", details: "Seria | Robustez | IVs: 15/31 | EVs: 60", moves: ["Rayo", "Reflejo", "Pantalla luz", "Foco resplandor"] },
+                    { name: "Vaporeon", id: 134, lvl: 43, item: "Restos", details: "Osada | Absorber Agua | IVs: 16/31 | EVs: 64", moves: ["Surf", "Bola sombra", "Bostezo", "Protección"] },
+                    { name: "Yanmega", id: 469, lvl: 43, item: "Gema Volador", details: "Osada | Impulso | IVs: 15/31 | EVs: 60", moves: ["Zumbido", "Protección", "Tajo aéreo", "Poder pasado"] },
+                    { name: "Aerodactyl", id: 142, lvl: 44, item: "Gema Volador", details: "Seria | Presión | IVs: 16/31 | EVs: 64", moves: ["Avalancha", "Triturar", "Acróbata", "Terremoto"] },
+                    { name: "Dudunsparce", id: 982, lvl: 44, item: "Restos", details: "Plácida | Dicha | IVs: 27/31 | EVs: 252 PS", moves: ["Hipertaladro", "Rayo hielo", "Deslumbrar", "Respiro"] },
+                    { name: "Porygon2", id: 233, lvl: 45, item: "Min.Evol", details: "Osada | Descarga | IVs: 28/31 | EVs: 64", moves: ["Tri ataque", "Chispazo", "Psíquico", "Recuperación"] }
+                ]
+            }
+        ]
+    },
+    {
+        location: "LÍDERES DE GIMNASIO - ASALTO LIGA POKÉMON",
+        encounters: [
+            {
+                trainer: "VS BROCK",
+                pokemon: [
+                    { name: "Onix", id: 95, lvl: 45, item: "Min.Evol", details: "Seria | Robustez | IVs: 17/31 | EVs: 72", moves: ["Tumba rocas", "Trampa rocas", "Terratemblor", "Cola dragón"] },
+                    { name: "Sudowoodo", id: 185, lvl: 45, item: "Chaleco Asalto", details: "Seria | Robustez | IVs: 17/31 | EVs: 72", moves: ["Roca Afilada", "Abrecaminos", "Golpe bajo", "Patada baja"] },
+                    { name: "Kabutops", id: 141, lvl: 46, item: "Banda focus", details: "Firme | Arm.Frágil | IVs: 17/31 | EVs: 72", moves: ["Avalancha", "Cascada", "Chupavidas", "Aqua jet"] },
+                    { name: "Omastar", id: 139, lvl: 46, item: "Hierba Única", details: "Modesta | Arm.Frágil | IVs: 17/31 | EVs: 72", moves: ["Surf", "Poder pasado", "Rayo hielo", "Rayo meteoro"] },
+                    { name: "Golem", id: 76, lvl: 47, item: "Seguro Debilidad", details: "Firme | Robustez | IVs: 29/31 | EVs: 72", moves: ["Avalancha", "Terremoto", "Golpe calor", "Golpe bajo"] }
+                ]
+            },
+            {
+                trainer: "VS MISTY",
+                pokemon: [
+                    { name: "Politoed", id: 186, lvl: 45, item: "Roca Lluvia", details: "Seria | Llovizna | IVs: 17/31 | EVs: 72", moves: ["Viraje", "Hipnosis", "Descanso", "Sonámbulo"] },
+                    { name: "Seaking", id: 119, lvl: 45, item: "Piedra Pómez", details: "Seria | Nado Rápido | IVs: 17/31 | EVs: 72", moves: ["Viraje", "Desarme", "Megacuerno", "Perforador"] },
+                    { name: "Golduck", id: 55, lvl: 46, item: "C.Xperto", details: "Seria | Nado Rápido | IVs: 17/31 | EVs: 72", moves: ["Surf", "Psíquico", "Rayo hielo", "Onda certera"] },
+                    { name: "Kingler", id: 99, lvl: 46, item: "Chal.Asalto", details: "Cauta | Pot.Bruta | IVs: 17/31 | EVs: 72", moves: ["Avalancha", "Martillazo", "Machada", "Guillotina"] },
+                    { name: "Gyarados", id: 130, lvl: 46, item: "Restos", details: "Firme | Intimidación | IVs: 17/31 | EVs: 72", moves: ["Onda trueno", "Furia dragón", "Cascada", "Bote"] },
+                    { name: "Starmie", id: 121, lvl: 47, item: "Vidasfera", details: "Miedosa | Iluminación | IVs: 29/31 | EVs: 72", moves: ["Psíquico", "Hydrobomba", "Rayo", "Recuperación"] }
+                ]
+            },
+            {
+                trainer: "VS SURGE",
+                pokemon: [
+                    { name: "Ampharos", id: 181, lvl: 47, item: "Cubresuelos", details: "Osada | Electrogénesis | IVs: 17/31 | EVs: 72", moves: ["Voltiocambio", "Pulso dragón", "Descanso", "Sonámbulo"] },
+                    { name: "Magneton", id: 82, lvl: 46, item: "Min.Evol", details: "Seria | Robustez | IVs: 17/31 | EVs: 72", moves: ["Electrotela", "Foco resplandor", "Voltiocambio", "Rayo"] },
+                    { name: "Lanturn", id: 171, lvl: 45, item: "Restos", details: "Seria | Ab.Eléctr | IVs: 17/31 | EVs: 72", moves: ["Surf", "Rayo hielo", "Voltiocambio", "Rayo"] },
+                    { name: "Electivire", id: 466, lvl: 46, item: "C.Xperto", details: "Alegre | Puño Férreo | IVs: 17/31 | EVs: 72", moves: ["Puño trueno", "Puño drenaje", "Puño hielo", "Puño fuego"] },
+                    { name: "Raichu", id: 26, lvl: 46, item: "Gema Normal", details: "Seria | El.Estático | IVs: 17/31 | EVs: 72", moves: ["Sorpresa", "Rayo", "Vel.extrema", "Surf"] },
+                    { name: "Jolteon", id: 135, lvl: 47, item: "Vidasfera", details: "Miedosa | Abs.Eléctrico | IVs: 31/31 | EVs: 72", moves: ["Rayo", "Bola sombra", "Vozarrón", "Poder oculto (fuego)"] }
+                ]
+            },
+            {
+                trainer: "VS ERIKA",
+                pokemon: [
+                    { name: "Tangrowth", id: 465, lvl: 47, item: "Chal.Asalto", details: "Seria | Sebo | IVs: 17/31 | EVs: 72", moves: ["Bomba lodo", "Desarme", "Gigadrenado", "Machada"] },
+                    { name: "Bellossom", id: 182, lvl: 46, item: "Roca Calor", details: "Miedosa | Ef.Espora | IVs: 15/31 | EVs: 60", moves: ["Día soleado", "Rayo solar", "Absorbefuerza", "Meteorobola"] },
+                    { name: "Jumpluff", id: 189, lvl: 46, item: "Piedra Pómez", details: "Miedosa | Allanamiento | IVs: 17/31 | EVs: 252 Def/Spe", moves: ["Gigadrenado", "Absorbefuerza", "Rayo solar", "Meteorobola"] },
+                    { name: "Exeggutor", id: 103, lvl: 47, item: "Vidasfera", details: "Miedosa | Clorofila | IVs: 17/31 | EVs: 72", moves: ["Psíquico", "Gigadrenado", "Poder pasado", "Rayo solar"] },
+                    { name: "Victreebel", id: 71, lvl: 47, item: "Banda Focus", details: "Miedosa | Clorofila | IVs: 17/31 | EVs: 72", moves: ["Puya nociva", "Hoja aguda", "Meteorobola", "Cuchilla solar"] },
+                    { name: "Vileplume", id: 45, lvl: 48, item: "Chal.Asalto", details: "Osada | Ef.Espora | IVs: 27/31 | EVs: 72", moves: ["Gigadrenado", "Bomba lodo", "Meteorobola", "Rayo solar"] }
+                ]
+            },
+            {
+                trainer: "VS KOGA",
+                pokemon: [
+                    { name: "Forretress", id: 205, lvl: 46, item: "Restos", details: "Seria | Robustez | IVs: 18/31 | EVs: 76", moves: ["Púas", "Trampa rocas", "Voltiocambio", "Plancha corporal"] },
+                    { name: "Gliscor", id: 472, lvl: 47, item: "Toxisfera", details: "Seria | Antídoto | IVs: 18/31 | EVs: 76", moves: ["Imagen", "Terremoto", "Tóxico", "Protección"] },
+                    { name: "Beedrill", id: 15, lvl: 47, item: "Pañuelo Elegido", details: "Alegre | Adaptable | IVs: 18/31 | EVs: 252 Atk/Spe", moves: ["Ida y vuelta", "Taladradora", "Puya nociva", "Desarme"] },
+                    { name: "Muk", id: 89, lvl: 48, item: "Lodo negro", details: "Seria | Toque Tóxico | IVs: 18/31 | EVs: 76", moves: ["Lanza mugre", "Puño sombra", "Puño drenaje", "Maldición"] },
+                    { name: "Tentacruel", id: 73, lvl: 48, item: "Restos", details: "Agitada | Lodo Líquido | IVs: 18/31 | EVs: 252 PS/Def", moves: ["Viraje", "Púas tóxicas", "Desarme", "Escaldar"] },
+                    { name: "Weezing", id: 110, lvl: 49, item: "Chal.Asalto", details: "Osada | Levitación | IVs: 31/31 | EVs: 252 SpA/SpD", moves: ["Llamarada", "Bomba lodo", "Rayo", "Bola sombra"] }
+                ]
+            },
+            {
+                trainer: "VS SABRINA",
+                pokemon: [
+                    { name: "Unown", id: 201, lvl: 49, item: "Cubresuelos", details: "Osada | Psicogénesis | IVs: 19/31 | EVs: 64", moves: ["Vasta fuerza", "Teletransporte", "Poder pasado", "Esfera aural"] },
+                    { name: "Mr.Mime", id: 122, lvl: 48, item: "Refleluz", details: "Seria | Filtro | IVs: 19/31 | EVs: 64", moves: ["Psíquico", "Reflejo", "Brillo mágico", "Pantalla luz"] },
+                    { name: "Espeon", id: 196, lvl: 48, item: "Vidasfera", details: "Modesta | Espejomágico | IVs: 19/31 | EVs: 252 SpA/Spe", moves: ["Psíquico", "Brillo mágico", "Bola sombra", "Hierba lazo"] },
+                    { name: "Slowking", id: 199, lvl: 49, item: "Restos", details: "Osada | Regeneración | IVs: 19/31 | EVs: 252 PS/Def", moves: ["Relajo", "Escaldar", "Teletransporte", "Premonición"] },
+                    { name: "Exeggutor", id: 103, lvl: 49, item: "Pañuelo Elegido", details: "Miedosa | Clorofila | IVs: 19/31 | EVs: 64", moves: ["Lluevehojas", "Gigadrenado", "Poder pasado", "Psíquico"] },
+                    { name: "Abra", id: 63, lvl: 50, item: "Super Mineral", details: "Miedosa | Muro Mágico | IVs: 31/31 | EVs: 252 SpA/Spe", moves: ["Psicocarga", "Brillo mágico", "Bola sombra", "Hierba lazo"] }
+                ]
+            },
+            {
+                trainer: "VS BLAINE",
+                pokemon: [
+                    { name: "Ninetales", id: 38, lvl: 48, item: "Roca Calor", details: "Seria | Sequía | IVs: 19/31 | EVs: 76", moves: ["Fuego fatuo", "Paranormal", "Rayo solar", "Llamarada"] },
+                    { name: "Magcargo", id: 219, lvl: 48, item: "Hierb.Blanca", details: "Miedosa | Roca Sólida | IVs: 19/31 | EVs: 76", moves: ["Recuperación", "Llamarada", "Poder pasado", "Rompecoraza"] },
+                    { name: "Rapidash", id: 78, lvl: 49, item: "Vidasfera", details: "Alegre | Cuerpo Llama | IVs: 19/31 | EVs: 76", moves: ["Envite ígneo", "Megacuerno", "Perforador", "Fuerza equina"] },
+                    { name: "Typhlosion", id: 157, lvl: 50, item: "Pañuelo Elegido", details: "Modesta | Mar Llamas | IVs: 19/31 | EVs: 76", moves: ["Estallido", "Llamarada", "Onda certera", "Arenas ardientes"] },
+                    { name: "Magmortar", id: 467, lvl: 50, item: "Cinta Xperto", details: "Modesta | Mega Disparador | IVs: 19/31 | EVs: 252 SpA", moves: ["Llamarada", "Pulso umbrío", "Rayo", "Esfera aural"] },
+                    { name: "Arcanine", id: 59, lvl: 51, item: "Camp.Concha", details: "Firme | Intimidación | IVs: 31/31 | EVs: 252 Atk", moves: ["Envite ígneo", "Vel.extrema", "A bocajarro", "Abrecaminos"] }
+                ]
+            }
+        ]
+    },
+    {
+        location: "GIMNASIO CIUDAD VERDE - ÚLTIMA MEDALLA",
+        encounters: [
+            {
+                trainer: "VS EJECUTIVO ROCKET PROTÓN",
+                pokemon: [
+                    { name: "Qwilfish", id: 211, lvl: 49, item: "Banda focus", details: "Seria | Intimidación | IVs: 19/31 | EVs: 76", moves: ["Púas", "Púas tóxicas", "Viraje", "Puya nociva"] },
+                    { name: "Crobat", id: 169, lvl: 51, item: "Vidasfera", details: "Alegre | Allanamiento | IVs: 19/31 | EVs: 252 Atk/Spe", moves: ["Vuelo", "Ida y vuelta", "Veneno x", "Respiro"] },
+                    { name: "Slowbro", id: 80, lvl: 50, item: "Casco Dentado", details: "Osada | Despiste | IVs: 19/31 | EVs: 252 PS/Def", moves: ["Psicocarga", "Escaldar", "Relajo", "Amnesia"] },
+                    { name: "Muk", id: 89, lvl: 51, item: "Lodo negro", details: "Seria | Toque Tóxico | IVs: 19/31 | EVs: 76", moves: ["Lanza mugre", "Puño drenaje", "Puño sombra", "Maldición"] },
+                    { name: "Noctowl", id: 164, lvl: 51, item: "Telescopio", details: "Seria | Cromolente | IVs: 19/31 | EVs: 76", moves: ["Vendaval", "Onda ígnea", "Hipnosis", "Respiro"] },
+                    { name: "Umbreon", id: 197, lvl: 52, item: "Restos", details: "Cauta | Sincronización | IVs: 31/31 | EVs: 252 PS/SpD", moves: ["Triturar", "Bostezo", "Maldición", "Descanso"] }
+                ]
+            },
+            {
+                trainer: "VS ADMINISTRADOR ROCKET PETREL",
+                pokemon: [
+                    { name: "Cloyster", id: 91, lvl: 51, item: "Banda Focus", details: "Seria | Encadenado | IVs: 20/31 | EVs: 80", moves: ["Púas", "Pedrada", "Carámbano", "Rompecoraza"] },
+                    { name: "Granbull", id: 210, lvl: 50, item: "Chal.Asalto", details: "Seria | Intimidación | IVs: 20/31 | EVs: 80", moves: ["Triturar", "Carantoña", "Puño drenaje", "Terremoto"] },
+                    { name: "Pinsir", id: 127, lvl: 52, item: "Pañuelo Elegido", details: "Alegre | Autoestima | IVs: 20/31 | EVs: 252 Atk/Spe", moves: ["Terremoto", "Avalancha", "A bocajarro", "Chupavidas"] },
+                    { name: "Primeape", id: 57, lvl: 51, item: "Chal.Asalto", details: "Agitada | Competitivo | IVs: 20/31 | EVs: 80", moves: ["Puño drenaje", "Avalancha", "Desarme", "Terremoto"] },
+                    { name: "Octillery", id: 224, lvl: 51, item: "Vidasfera", details: "Seria | Mega Disparador | IVs: 20/31 | EVs: 80", moves: ["Pulpocañón", "Lanzallamas", "Pulso umbrío", "Foco resplandor"] },
+                    { name: "Weezing", id: 110, lvl: 53, item: "Casco Dentado", details: "Cauta | Levitación | IVs: 31/31 | EVs: 252 PS/Def", moves: ["Bomba lodo", "Fuego fatuo", "Lanzallamas", "Divide dolor"] }
+                ]
+            },
+            {
+                trainer: "VS ADMINISTRADOR JEFE ROCKET ATLAS",
+                pokemon: [
+                    { name: "Skarmory", id: 227, lvl: 52, item: "Casc.Dentado", details: "Cauta | Robustez | IVs: 21/31 | EVs: 252 PS/SpD", moves: ["Plancha corporal", "Respiro", "Trampa rocas", "Defensa férrea"] },
+                    { name: "Scizor", id: 212, lvl: 53, item: "Rev.Metálico", details: "Seria | Experto | IVs: 21/31 | EVs: 252 PS/SpD", moves: ["Ida y vuelta", "Fuerza bruta", "Respiro", "Puño bala"] },
+                    { name: "Tyranitar", id: 248, lvl: 55, item: "Piedra Pómez", details: "Alegre | Pot.Bruta | IVs: 31/31 | EVs: 252 Atk/Spe", moves: ["Triturar", "Terremoto", "Roca afilada", "Golpe aéreo"] },
+                    { name: "Donphan", id: 232, lvl: 52, item: "Gema Normal", details: "Firme | Robustez | IVs: 21/31 | EVs: 252 Atk/Spe", moves: ["Fisura", "Desarme", "Giro rápido", "Canto helado"] },
+                    { name: "Houndoom", id: 229, lvl: 54, item: "G.Elegidas", details: "Ingenua | Entusiasmo | IVs: 21/31 | EVs: 252 Spe", moves: ["Colmillo trueno", "Golpe bajo", "Látigo ígneo", "Sofoco"] },
+                    { name: "Feraligatr", id: 160, lvl: 55, item: "Vidasfera", details: "Alegre | Pot.Bruta | IVs: 31/31 | EVs: 252 Atk/Spe", moves: ["Danza dragón", "Triturar", "Puño hielo", "Cascada"] }
+                ]
+            }
+        ]
+    },
+    {
+        location: "MISIÓN COMITÉ LIGA POKÉMON",
+        encounters: [
+            {
+                trainer: "VS MIEMBRO COMITÉ 1",
+                pokemon: [
+                    { name: "Charizard", id: 6, lvl: 54, item: "Piedra Pómez", details: "Miedosa | Mar Llamas | IVs: 21/31 | EVs: 84", moves: ["Anillo ígneo", "Tajo aéreo", "Pulso dragón", "Onda certera"] },
+                    { name: "Blastoise", id: 9, lvl: 54, item: "Restos", details: "Plácida | Torrente | IVs: 21/31 | EVs: 84", moves: ["Hidrocañón", "Esfera aural", "Sorpresa", "Viraje"] },
+                    { name: "Venusaur", id: 3, lvl: 54, item: "Baya Kouba", details: "Seria | Espesura | IVs: 21/31 | EVs: 84", moves: ["Planta feroz", "Fuerza", "Terremoto", "Puya nociva"] },
+                    { name: "Snorlax", id: 143, lvl: 55, item: "Restos", details: "Firme | Sebo | IVs: 31/31 | EVs: 252 PS/Atk", moves: ["Bostezo", "Doble filo", "Terremoto", "Lariat oscuro"] }
+                ]
+            },
+            {
+                trainer: "VS MIEMBRO COMITÉ 2",
+                pokemon: [
+                    { name: "Golem", id: 76, lvl: 54, item: "Baya Chiri", details: "Firme | Robustez | IVs: 21/31 | EVs: 84", moves: ["Terremoto", "Pedrada", "Explosión", "Trampa rocas"] },
+                    { name: "Starmie", id: 121, lvl: 54, item: "Hierba Única", details: "Miedosa | Iluminación | IVs: 21/31 | EVs: 84", moves: ["Hidrobomba", "Rayo hielo", "Psíquico", "Rayo meteoro"] },
+                    { name: "Jolteon", id: 135, lvl: 54, item: "Globo Helio", details: "Modesta | Absorber Eléctrico | IVs: 31/31 | EVs: 84", moves: ["Rayo", "Bola sombra", "Poder oculto (planta)", "Vozarrón"] },
+                    { name: "Snorlax", id: 143, lvl: 55, item: "B.Ziuela", details: "Firme | Sebo | IVs: 31/31 | EVs: 252 PS/Atk", moves: ["Maldición", "Golpe cuerpo", "Terremoto", "Descanso"] }
+                ]
+            },
+            {
+                trainer: "VS POKÉLOTODO",
+                pokemon: [
+                    { name: "Miltank", id: 241, lvl: 55, item: "Baya Pomaro", details: "Osada | Intrépido | IVs: 23/31 | EVs: 252 Def/SpD", moves: ["Trampa rocas", "Batido", "Tóxico", "Plancha corporal"] },
+                    { name: "Butterfree", id: 12, lvl: 54, item: "Banda Focus", details: "Modesta | Muro Mágico | IVs: 23/31 | EVs: 252 SpA/Spe", moves: ["Danza aleteo", "Zumbido", "Psíquico", "Gigadrenado"] },
+                    { name: "Hitmontop", id: 237, lvl: 53, item: "Chaleco Asalto", details: "Firme | Experto | IVs: 23/31 | EVs: 252 PS/SpD", moves: ["Giro rápido", "Ultrapuño", "Golpe bajo", "Triple axel"] },
+                    { name: "Mamoswine", id: 473, lvl: 56, item: "Piedra Pómez", details: "Alegre | Sebo | IVs: 23/31 | EVs: 252 Atk/Spe", moves: ["Terremoto", "Chuzos", "Roca afilada", "Canto helado"] },
+                    { name: "Flareon", id: 136, lvl: 55, item: "Pañuelo Elegido", details: "Miedosa | Absorber Fuego | IVs: 23/31 | EVs: 252 Atk/Spe", moves: ["Flarembestida"] },
+                    { name: "Blissey", id: 242, lvl: 57, item: "Piedra Oval", details: "Osada | Normalidad | IVs: 31/31 | EVs: 252 SpA/Def", moves: ["Triataque", "Lanzallamas", "Amortiguador", "Campana cura"] }
+                ]
+            },
+            {
+                trainer: "VS MIEMBRO COMITÉ 3",
+                pokemon: [
+                    { name: "Alakazam", id: 65, lvl: 53, item: "Banda Focus", details: "Modesta | Muro Mágico | IVs: 24/31 | EVs: 252 SpA/Spe", moves: ["Psíquico", "Bola sombra", "Brillo mágico", "Reflejo"] },
+                    { name: "Arcanine", id: 59, lvl: 54, item: "Botas Gruesas", details: "Firme | Intimidación | IVs: 24/31 | EVs: 252 PS/Spe", moves: ["Envite ígneo", "Vel.extrema", "Sol matinal", "Fuego fatuo"] },
+                    { name: "Rhyperior", id: 464, lvl: 55, item: "Chaleco Asalto", details: "Cauta | Roca Sólida | IVs: 24/31 | EVs: 252 PS/SpD", moves: ["Terremoto", "Fuerza", "Machada", "Romperrocas"] },
+                    { name: "Lapras", id: 131, lvl: 55, item: "Llamasfera", details: "Osada | Caparazón | IVs: 24/31 | EVs: 252 PS/Def", moves: ["Descanso", "Sonámbulo", "Liofilización", "Amnesia"] },
+                    { name: "Machamp", id: 68, lvl: 55, item: "Llamasfera", details: "Firme | Agallas | IVs: 24/31 | EVs: 252 Atk/Spe", moves: ["Puño bala", "A bocajarro", "Desarme", "Imagen"] },
+                    { name: "Snorlax", id: 143, lvl: 56, item: "Baya Higog", details: "Cauta | Gula | IVs: 31/31 | EVs: 188 PS/Def/SpD", moves: ["Maldición", "Reciclar", "Imagen", "Puño fuego"] }
+                ]
+            },
+            {
+                trainer: "VS ADMINISTRADOR ROCKET FRANK",
+                pokemon: [
+                    { name: "Kabutops", id: 141, lvl: 55, item: "Banda Focus", details: "Alegre | Armadura Frágil | IVs: 24/31 | EVs: 252 Atk/Spe", moves: ["Hidroariete", "Roca afilada", "Acua jet", "Trampa rocas"] },
+                    { name: "Drapion", id: 452, lvl: 56, item: "Chaleco Asalto", details: "Firme | Armadura Batalla | IVs: 24/31 | EVs: 252 Atk/Def", moves: ["Puya nociva", "Terremoto", "Guillotina", "Chupavidas"] },
+                    { name: "Purugly", id: 432, lvl: 55, item: "Vidasfera", details: "Alegre | Sebo | IVs: 24/31 | EVs: 252 Atk/Spe", moves: ["Sorpresa", "Frustración", "Ida y vuelta", "Golpe bajo"] },
+                    { name: "Nidoking", id: 34, lvl: 56, item: "Pañuelo Elegido", details: "Modesta | Pot.Bruta | IVs: 24/31 | EVs: 252 SpA/Spe", moves: ["Onda tóxica", "Tierra viva", "Rayo hielo", "Lanzallamas"] },
+                    { name: "Torterra", id: 389, lvl: 57, item: "Restos", details: "Firme | Caparazón | IVs: 31/31 | EVs: 252 PS/Atk", moves: ["Mazazo", "Recogearena", "Roca afilada", "Terremoto"] },
+                    { name: "Garchomp", id: 445, lvl: 58, item: "Piedra Pómez", details: "Alegre | Piel Tosca | IVs: 31/31 | EVs: 252 Atk/Spe", moves: ["Guillotina", "Terremoto", "Garra dragón", "Roca afilada"] }
+                ]
+            },
+            {
+                trainer: "VS MAGNEMITE CIENTÍFICO COMITÉ",
+                pokemon: [
+                    { name: "Magnemite", id: 81, lvl: 58, item: "Super Mineral", details: "Miedosa | Robustez | IVs: 31/31 | EVs: 252 SpA/Spe", moves: ["Foco resplandor", "Rayo", "Onda vacío", "Poder oculto (fuego)"] }
+                ]
+            },
+            {
+                trainer: "VS CIENTÍFICO COMITÉ",
+                pokemon: [
+                    { name: "Muk Alola", id: 10113, lvl: 56, item: "Baya Higog", details: "Cauta | Gula | IVs: 24/31 | EVs: 252 PS/SpD", moves: ["Reciclar", "Maldición", "Puño drenaje", "Puya nociva"] },
+                    { name: "Rotom Ventilador", id: 10008, lvl: 57, item: "P.Elegido", details: "Modesta | Energía Eólica | IVs: 24/31 | EVs: 252 SpA/Spe", moves: ["Tajo aéreo", "Voltiocambio", "Pirotecnia", "Rayo"] },
+                    { name: "Slowking Galar", id: 10172, lvl: 55, item: "Roca del Rey", details: "Osada | Ritmo Propio | IVs: 24/31 | EVs: 252 PS/SpA", moves: ["Bomba lodo", "Hidrobomba", "Relajo", "Lanzallamas"] },
+                    { name: "Excadrill", id: 530, lvl: 56, item: "Piedra Pómez", details: "Firme | Rompemoldes | IVs: 24/31 | EVs: 252 Atk/Spe", moves: ["Terremoto", "Cabezahierro", "Giro rápido", "Roca afilada"] },
+                    { name: "Dragalge", id: 691, lvl: 58, item: "Lodo Negro", details: "Serena | Adaptable | IVs: 24/31 | EVs: 252 PS/Def/SpD", moves: ["Onda tóxica", "Onda certera", "Cometa draco", "Hidrobomba"] },
+                    { name: "Greninja", id: 658, lvl: 58, item: "Vidasfera", details: "Afable | Mutatipo | IVs: 31/31 | EVs: 252 SpA/Spe", moves: ["Shuriken de agua", "Lanza mugre", "Paranormal", "Rayo hielo"] }
+                ]
+            },
+            {
+                trainer: "VS DIRECTOR CG LIGA",
+                pokemon: [
+                    { name: "Magnezone", id: 462, lvl: 57, item: "Semilla Electro", details: "Modesta | Robustez | IVs: 25/31 | EVs: 252 PS/Def", moves: ["Foco resplandor", "Rayo", "Plancha corporal", "Cambio marcha"] },
+                    { name: "Moltres", id: 146, lvl: 59, item: "Botas Gruesas", details: "Osada | Pot.Bruta | IVs: 25/31 | EVs: 252 PS/Spe", moves: ["Aerochorro", "Respiro", "Llama final", "Ida y vuelta"] },
+                    { name: "Politoed", id: 186, lvl: 56, item: "Roca del Rey", details: "Osada | Llovizna | IVs: 25/31 | EVs: 252 PS/Def", moves: ["Hidrobomba", "Estruendo", "Onda vacío", "Teletransporte"] },
+                    { name: "Tangrowth", id: 465, lvl: 57, item: "Bola Férrea", details: "Plácida | Sebo | IVs: 25/31 | EVs: 252 PS/SpD", moves: ["Planta feroz", "Poder pasado", "Fisura", "Leafitobombas"] },
+                    { name: "Porygon-Z", id: 474, lvl: 58, item: "Pañuelo Elegido", details: "Modesta | Adaptable | IVs: 23/31 | EVs: 252 SpA/Spe", moves: ["Triataque", "Pulso umbrío", "Trueno", "Cabeza sorpresa"] },
+                    { name: "Melmetal", id: 808, lvl: 60, item: "Chaleco Asalto", details: "Cauta | Puño Férreo | IVs: 31/31 | EVs: 252 Atk/SpD", moves: ["Ferropuño doble", "Terremoto", "Puños plasma", "Puño bala"] }
+                ]
+            }
+        ]
+    },
+    {
+        location: "MESETA AÑIL - CALLE VICTORIA",
+        encounters: [
+            {
+                trainer: "VS AZUL",
+                pokemon: [
+                    { name: "Pidgeot", id: 18, lvl: 57, item: "Hierb.Única", details: "Firme | Garra Duro | IVs: 21/31 | EVs: 84", moves: ["Ataque aéreo", "A bocajarro", "Ida y vuelta", "Vuelo"] },
+                    { name: "Alakazam", id: 65, lvl: 58, item: "Refleluz", details: "Seria | Muro Mágico | IVs: 21/31 | EVs: 84", moves: ["Psíquico", "Brillo mágico", "Reflejo", "Pantalla luz"] },
+                    { name: "Jolteon Starter", id: 135, lvl: 58, item: "Vidasfera", details: "Modesta | Abs.Eléc | IVs: 21/31 | EVs: 128", moves: ["Relámpago súbito", "Joltioparálisis", "Vapodrenaje", "Umbreozona"] },
+                    { name: "Heracross", id: 214, lvl: 58, item: "Banda Focus", details: "Alegre | Autoestima | IVs: 21/31 | EVs: 252 Atk/Spe", moves: ["Roca afilada", "Terremoto", "Megacuerno", "Abrecamino"] },
+                    { name: "Arcanine", id: 59, lvl: 58, item: "Piedra Pómez", details: "Seria | Intimidación | IVs: 21/31 | EVs: 252 Atk/Spe", moves: ["Vel.extrema", "Envite ígneo", "Voltio cruel", "A bocajarro"] },
+                    { name: "Blastoise", id: 9, lvl: 59, item: "Chal.Asalto", details: "Osada | Torrente | IVs: 31/31 | EVs: 128 PS/Def/SpA", moves: ["Hidrocañón", "Pulso umbrío", "Rayo hielo", "Plancha corporal"] }
+                ]
+            },
+            {
+                trainer: "VS RIVAL ANDRA",
+                pokemon: [
+                    { name: "Weavile", id: 461, lvl: 60, item: "Banda Focus", details: "Firme | Foco Interno | IVs: 22/31 | EVs: 252 Atk/Spe", moves: ["Desarme", "Triple Axel", "Patada baja", "Sorpresa"] },
+                    { name: "Electivire", id: 466, lvl: 59, item: "Electrizador", details: "Alegre | Puño Férreo | IVs: 22/31 | EVs: 252 Atk/Spe", moves: ["Puño trueno", "Puño drenaje", "Puño hielo", "Puño fuego"] },
+                    { name: "Ursaring", id: 217, lvl: 59, item: "Llamasfera", details: "Alegre | Agallas | IVs: 22/31 | EVs: 252 Atk/Spe", moves: ["Imagen", "Abrecaminos", "Cabezazo zen", "A bocajarro"] },
+                    { name: "Tentacruel", id: 73, lvl: 59, item: "Lodo negro", details: "Osada | Lodo Líquido | IVs: 22/31 | EVs: 252 PS/Def", moves: ["Escaldar", "Viraje", "Bomba lodo", "Desarme"] },
+                    { name: "Heracross", id: 214, lvl: 60, item: "Pañuelo Elegido", details: "Firme | Autoestima | IVs: 22/31 | EVs: 252 Atk/Spe", moves: ["Megacuerno", "Roca afilada", "Terremoto", "A bocajarro"] },
+                    { name: "Crobat", id: 169, lvl: 57, item: "Chal.Asalto", details: "Firme | Foco Interno | IVs: 31/31 | EVs: 252 Atk/Def", moves: ["Ala bis", "Espada santa", "Veneno x", "Chupavidas"] }
+                ]
+            }
+        ]
+    },
+    {
+        location: "LIGA POKÉMON DE KANTO",
+        encounters: [
+            {
+                trainer: "VS ALTO MANDO LORELEI",
+                pokemon: [
+                    { name: "Glaceon", id: 471, lvl: 58, item: "Roca helada", details: "Modesta | Nevada | IVs: 23/31 | EVs: 252 PS/SpA", moves: ["Rayo hielo", "Liofilización", "Bola sombra", "Bola neblina"] },
+                    { name: "Cloyster", id: 91, lvl: 57, item: "Banda focus", details: "Alegre | Encadenado | IVs: 23/31 | EVs: 252 Atk/Spe", moves: ["Rompecoraza", "Canto helado", "Pedrada", "Carámbano"] },
+                    { name: "Slowbro", id: 80, lvl: 58, item: "Chaleco Asalto", details: "Osada | Despiste | IVs: 23/31 | EVs: 252 Def/SpA", moves: ["Ventisca", "Escaldar", "Psicocarga", "Plancha corporal"] },
+                    { name: "Jynx", id: 124, lvl: 60, item: "Piedra Pómez", details: "Miedosa | Espejomágico | IVs: 23/31 | EVs: 252 SpA/Spe", moves: ["Ventisca", "Psíquico", "Beso amoroso", "Bola sombra"] },
+                    { name: "Mamoswine", id: 473, lvl: 60, item: "Tabla Helada", details: "Firme | Sebo | IVs: 23/31 | EVs: 252 PS/Atk", moves: ["Terremoto", "Chuzos", "Trampa rocas", "Canto helado"] },
+                    { name: "Lapras", id: 131, lvl: 60, item: "Restos", details: "Osada | Caparazón | IVs: 31/31 | EVs: 252 PS/Def/SpD", moves: ["Buceo", "Rayo", "Ventisca", "Gota vital"] }
+                ]
+            },
+            {
+                trainer: "VS ALTO MANDO BRUNO",
+                pokemon: [
+                    { name: "Steelix", id: 208, lvl: 59, item: "Bola férrea", details: "Grosera | Robustez | IVs: 23/31 | EVs: 252 PS/SpD", moves: ["Terremoto", "Cola dragón", "Giro bola", "Trampa rocas"] },
+                    { name: "Hitmonchan", id: 107, lvl: 58, item: "Guantes Boxeo", details: "Agitada | Puño Férreo | IVs: 23/31 | EVs: 80", moves: ["Puño drenaje", "Ultrapuño", "Puño bala", "Puño trueno"] },
+                    { name: "Hitmonlee", id: 106, lvl: 58, item: "Gema normal", details: "Agitada | Liviano | IVs: 23/31 | EVs: 80", moves: ["Sorpresa", "A bocajarro", "Desarme", "Avalancha"] },
+                    { name: "Rhyperior", id: 464, lvl: 61, item: "Protector", details: "Firme | Roca Sólida | IVs: 23/31 | EVs: 252 Atk/Spe", moves: ["Terremoto", "Roca afilada", "Pulimento", "Golpe calor"] },
+                    { name: "Poliwrath", id: 62, lvl: 60, item: "Cinta Elegida", details: "Firme | Humedad | IVs: 23/31 | EVs: 252 Atk/Def", moves: ["Puño drenaje", "Viraje", "Avalancha", "Puya nociva"] },
+                    { name: "Machamp", id: 68, lvl: 61, item: "Chal.Asalto", details: "Firme | Indefenso | IVs: 31/31 | EVs: 252 PS/Atk", moves: ["Puñodinámico", "Puño fuego", "Roca afilada", "Puño bala"] }
+                ]
+            },
+            {
+                trainer: "VS ALTO MANDO AGATHA",
+                pokemon: [
+                    { name: "Gengar", id: 94, lvl: 59, item: "Banda Focus", details: "Miedosa | Levitación | IVs: 23/31 | EVs: 252 SpA/Spe", moves: ["Bola sombra", "Rayo", "Bomba lodo", "Hipnosis"] },
+                    { name: "Crobat", id: 169, lvl: 61, item: "Vidasfera", details: "Alegre | Allanamiento | IVs: 23/31 | EVs: 252 Atk/Spe", moves: ["Ida y vuelta", "Pájaro osado", "Veneno x", "Respiro"] },
+                    { name: "Misdreavus", id: 200, lvl: 60, item: "Bola Férrea", details: "Osada | Levitación | IVs: 23/31 | EVs: 252 PS/Def", moves: ["Bola sombra", "Absorbefuerza", "Paz mental", "Llama embrujada"] },
+                    { name: "Arbok", id: 24, lvl: 60, item: "Baya cardo", details: "Firme | Intimidación | IVs: 23/31 | EVs: 252 Atk/SpD", moves: ["Terremoto", "Golpe bajo", "Enrosque", "Lanza mugre"] },
+                    { name: "Honchkrow", id: 430, lvl: 60, item: "Pañuelo Elegido", details: "Alegre | Autoestima | IVs: 23/31 | EVs: 252 Atk/Spe", moves: ["Vuelo", "Tajo umbrío", "Fuerza bruta", "Ida y vuelta"] },
+                    { name: "Gengar", id: 94, lvl: 62, item: "Piedra Pómez", details: "Modesta | Levitación | IVs: 31/31 | EVs: 252 SpA/Spe", moves: ["Bola sombra", "Rayo", "Bomba lodo", "Psíquico"] }
+                ]
+            },
+            {
+                trainer: "VS ALTO MANDO LANCE (1er encuentro)",
+                pokemon: [
+                    { name: "Gyarados", id: 130, lvl: 59, item: "Escama Roja", details: "Alegre | Intimidación | IVs: 23/31 | EVs: 252 Atk/Spe", moves: ["Aqua cola", "Terremoto", "Danza dragón", "Furia dragón"] },
+                    { name: "Salamence", id: 373, lvl: 62, item: "Casco Dentado", details: "Firme | Intimidación | IVs: 23/31 | EVs: 252 PS/Def", moves: ["Vuelo", "Respiro", "Danza dragón", "Alivio"] },
+                    { name: "Kingdra", id: 230, lvl: 60, item: "Escamadragón", details: "Modesta | Adaptable | IVs: 23/31 | EVs: 252 SpA/Spe", moves: ["Cometa draco", "Hidrobomba", "Viraje", "Pulso dragón"] },
+                    { name: "Aerodactyl", id: 142, lvl: 61, item: "Vidasfera", details: "Firme | Presión | IVs: 23/31 | EVs: 252 Atk/Spe", moves: ["Ala bis", "Terremoto", "Avalancha", "Colm.fuego"] },
+                    { name: "Charizard", id: 6, lvl: 62, item: "Botas Gruesas", details: "Modesta | Mar Llamas | IVs: 23/31 | EVs: 252 SpA/Spe", moves: ["Anillo ígneo", "Pulso dragón", "Tajo aéreo", "Poder pasado"] },
+                    { name: "Dragonite", id: 149, lvl: 63, item: "B.Ziuela", details: "Firme | Multiescamas | IVs: 31/31 | EVs: 252 PS/Atk", moves: ["Enfado", "Ala bis", "Velocidad extrema", "Terremoto"] }
+                ]
+            },
+            {
+                trainer: "VS CAMPEÓN ROJO",
+                pokemon: [
+                    { name: "Pikachu Starter", id: 25, lvl: 67, item: "Bolaluminosa", details: "Alegre | Piel Eléctrica | IVs: 31/31 | EVs: 252 Atk/Spe", moves: ["Carantoña", "Sorpresa", "Plancha voladora", "Vel.extrema"] },
+                    { name: "Espeon", id: 196, lvl: 65, item: "Piedra Pómez", details: "Modesta | Espejomágico | IVs: 25/31 | EVs: 252 SpA/Spe", moves: ["Psíquico", "Sol matinal", "Reflejo", "Brillo mágico"] },
+                    { name: "Zapdos", id: 145, lvl: 66, item: "Bola Férrea", details: "Osada | Alas Vendaval | IVs: 25/31 | EVs: 252 PS/Def", moves: ["Aerochorro", "Respiro", "Onda ígnea", "Voltiocambio"] },
+                    { name: "Articuno", id: 144, lvl: 66, item: "Roca Helada", details: "Serena | Nevada | IVs: 25/31 | EVs: 252 PS/Def/SpD", moves: ["Velo aurora", "Respiro", "Ventisca", "Ida y vuelta"] },
+                    { name: "Moltres", id: 146, lvl: 66, item: "Botas Gruesas", details: "Miedosa | Sequía | IVs: 25/31 | EVs: 252 SpA/Spe", moves: ["Meteorobola", "Rayo solar", "Aerochorro", "Sol matinal"] },
+                    { name: "Charizard", id: 6, lvl: 67, item: "Charizardita X", details: "Firme | Garra Dura | IVs: 31/31 | EVs: 252 Atk/Spe", moves: ["Danza dragón", "Puño fuego", "Garra dragón", "Respiro"] }
+                ]
+            },
+            {
+                trainer: "VS EMPERADOR LANCE",
+                pokemon: [
+                    { name: "Dragonite", id: 149, lvl: 67, item: "B.Ziuela", details: "Cauta | Multiescamas | IVs: 25/31 | EVs: 252 PS/SpD", moves: ["Danza dragón", "Barrera", "Respiro", "Ala bis"] },
+                    { name: "Dragonite", id: 149, lvl: 68, item: "Dado Trucado", details: "Alegre | Multiescamas | IVs: 25/31 | EVs: 252 Atk/Spe", moves: ["Ráfaga escamas", "Terremoto", "Puño trueno", "Vel.extrema"] },
+                    { name: "Entei", id: 244, lvl: 69, item: "Botas Gruesas", details: "Firme | Cabeza Roca | IVs: 25/31 | EVs: 252 Atk/Spe", moves: ["Envite ígneo", "Vel.extrema", "Reflejo", "Roca afilada"] },
+                    { name: "Raikou", id: 243, lvl: 69, item: "Vidasfera", details: "Miedosa | Potencia Bruta | IVs: 25/31 | EVs: 252 SpA/Spe", moves: ["Rayo", "Esfera aural", "Paranormal", "Bola sombra"] },
+                    { name: "Suicune", id: 245, lvl: 69, item: "Restos", details: "Osada | Muro Mágico | IVs: 25/31 | EVs: 252 PS/Def", moves: ["Escaldar", "Paz mental", "Descanso", "Sonámbulo"] },
+                    { name: "Dragonite", id: 149, lvl: 70, item: "Dragonitita", details: "Audaz | Alas Vendaval | IVs: 31/31 | EVs: 252 Atk/SpA", moves: ["Ala bis", "Pulso dragón", "Respiro", "Surf"] }
+                ]
+            }
+        ]
+    }
+];
+
+function renderPage() {
+    const container = document.getElementById('content');
+    container.innerHTML = '';
+
+    battlesData.forEach(section => {
+        const sectionEl = document.createElement('div');
+        
+        let sectionHTML = `<div class="section-header">📍 ${section.location}</div><div class="grid">`;
+
+        section.encounters.forEach(enc => {
+            sectionHTML += `
+                <div class="encounter-card">
+                    <div class="encounter-title">${enc.trainer}</div>
+                    <div class="pokemon-list">
+            `;
+
+            enc.pokemon.forEach(p => {
+                const spriteUrl = `https://cdn.jsdelivr.net/gh/PokeAPI/sprites@master/sprites/pokemon/${p.id}.png`;
+                const itemHTML = p.item !== "No item" ? `<span class="item-badge">🎒 ${p.item}</span>` : '';
+                
+                let movesHTML = '';
+                if(p.moves && p.moves.length > 0) {
+                    movesHTML = '<div class="moves-grid">';
+                    p.moves.forEach(m => {
+                        movesHTML += `<div class="move-tag">${m}</div>`;
+                    });
+                    movesHTML += '</div>';
+                }
+
+                sectionHTML += `
+                    <div class="pokemon-card">
+                        <div class="sprite-box">
+                            <img src="${spriteUrl}" alt="${p.name}" loading="lazy" onerror="this.onerror=null;this.src='https://cdn.jsdelivr.net/gh/PokeAPI/sprites@master/sprites/pokemon/0.png';">
+                        </div>
+                        <div class="pokemon-info">
+                            <div class="pokemon-name">
+                                <span>${p.name}</span>
+                                <span class="level">Nv. ${p.lvl}</span>
+                            </div>
+                            ${itemHTML}
+                            <div class="details-line">${p.details}</div>
+                            ${movesHTML}
+                        </div>
+                    </div>
+                `;
+            });
+
+            sectionHTML += `
+                    </div>
+                </div>
+            `;
+        });
+
+        sectionHTML += `</div>`;
+        sectionEl.innerHTML = sectionHTML;
+        container.appendChild(sectionEl);
+    });
+}
+
+function filterEncounters() {
+    const query = document.getElementById('searchInput').value.toLowerCase();
+    const cards = document.querySelectorAll('.encounter-card');
+
+    cards.forEach(card => {
+        const text = card.innerText.toLowerCase();
+        if(text.includes(query)) {
+            card.style.display = "flex";
+        } else {
+            card.style.display = "none";
+        }
+    });
+}
+
+renderPage();
+</script>
+
+</body>
+</html>
